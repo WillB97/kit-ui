@@ -10,13 +10,13 @@
       href="../node_modules/@mdi/font/css/materialdesignicons.min.css"
     />
     <link rel="stylesheet" href="style.scss" />
-    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml"/>
   </head>
 
   <body>
     <div class="controls" id="controls">
       <div class="field has-addons control-buttons">
-        <p class="control">
+        <!-- <p class="control">
           <button class="button" data-action="start" title="Start">
             <span class="icon has-text-success">
               <span class="mdi mdi-24px mdi-play"></span>
@@ -36,7 +36,7 @@
               <span class="mdi mdi-24px mdi-close-octagon"></span>
             </span>
           </button>
-        </p>
+        </p> -->
         <p class="control">
           <button class="button" data-action="clearLog" title="Clear log">
             <span class="icon has-text-link">
@@ -70,7 +70,7 @@
             </span>
           </span>
         </div>
-        <div class="control">
+        <!-- <div class="control">
           <span
             class="modal-trigger button"
             data-target="modal-info"
@@ -80,8 +80,8 @@
               <span class="mdi mdi-24px mdi-information"></span>
             </span>
           </span>
-        </div>
-        <div class="control">
+        </div> -->
+        <!-- <div class="control">
           <div class="select">
             <select
               id="mode_select"
@@ -106,16 +106,16 @@
               <option value="3">Zone 3</option>
             </select>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="mobile-metadata-toggle">
-        <div class="control">
+        <!-- <div class="control">
           <span id="mobile-metadata-toggle" tabindex="0" class="button">
             <span class="icon has-text-link">
               <span class="mdi mdi-24px mdi-cog" />
             </span>
           </span>
-        </div>
+        </div> -->
         <div class="control">
           <span
             tabindex="0"
@@ -151,7 +151,7 @@
           </span>
         </div>
       </div>
-      <div id="mobile-metadata-controls">
+      <!-- <div id="mobile-metadata-controls">
         <div class="mobile-control">
           <span class="mobile-control-label">Mode</span>
           <ul class="radio-buttons">
@@ -230,7 +230,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="log-list" id="log"></div>
 
@@ -254,7 +254,7 @@
       </div>
     </div>
 
-    <div class="modal" id="modal-info">
+    <!-- <div class="modal" id="modal-info">
       <div class="modal-background modal-background-close"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -277,7 +277,7 @@
           </div>
         </section>
       </div>
-    </div>
+    </div> -->
 
     <div class="modal" id="modal-camera">
       <div class="modal-background modal-background-close"></div>
@@ -288,8 +288,7 @@
         </header>
         <section class="modal-card-body">
           <p id="no-annotated-image-instructions">
-            Use <code>R.camera.see()</code> or
-            <code>R.camera.see_ids()</code> in your robot code to see an
+            Use <code>R.camera.see()</code> in your robot code to see an
             annotated image.
           </p>
           <img id="last-annotated-image" />

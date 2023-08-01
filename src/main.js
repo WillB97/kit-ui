@@ -144,15 +144,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
     el.addEventListener("click", function (e) {
       e.preventDefault();
       switch (e.target.dataset.action) {
-        case "start":
-          broadcast("start_button");
-          break;
-        case "restart":
-          sendProcessRequest("restart");
-          break;
-        case "kill":
-          sendProcessRequest("kill");
-          break;
+        // case "start":
+        //   broadcast("start_button");
+        //   break;
+        // case "restart":
+        //   sendProcessRequest("restart");
+        //   break;
+        // case "kill":
+        //   sendProcessRequest("kill");
+        //   break;
         case "clearLog":
           clearLog();
           break;
