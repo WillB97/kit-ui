@@ -220,7 +220,7 @@ const handlers = {
 
 client.on("message", function (topic, payload) {
   let contents = null;
-  subtopic = topic.slice(MQTT_TOPIC.length - 1);
+  const subtopic = topic.slice(MQTT_TOPIC.length - 1);
   if (subtopic.startsWith("camera/")) {
     // If the payload is from the camera, just use the raw string.
     try {
