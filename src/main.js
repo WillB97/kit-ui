@@ -223,7 +223,12 @@ client.on("message", function (topic, payload) {
   subtopic = topic.slice(MQTT_TOPIC.length - 1);
   if (subtopic.startsWith("camera/")) {
     // If the payload is from the camera, just use the raw string.
-    contents = payload.toString();
+    try {
+      contents = JSON.parse(payload.toString());
+      contents = contents.data
+    } catch (error) {
+      contents = payload.toString();
+    }
     console.log(
       isOwnPayload(contents) ? "🦝" : "🤖",
       topic,
