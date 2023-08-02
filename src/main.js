@@ -226,7 +226,7 @@ client.on("message", function (topic, payload) {
     try {
       contents = JSON.parse(payload.toString());
       contents = contents.data
-    } catch (error) {
+    } catch {
       contents = payload.toString();
     }
     console.log(
