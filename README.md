@@ -1,6 +1,6 @@
 # kit-ui
 
-A browser based interface for [Astoria](https://github.com/srobo/astoria) based systems.
+A browser based interface for [Runusb](https://github.com/sourcebots/runusb) based systems.
 
 ## Local Setup
 
@@ -9,22 +9,6 @@ A browser based interface for [Astoria](https://github.com/srobo/astoria) based 
 - Node
 - npm
 - Docker (recommended)
-
-### Astoria Docker Setup
-
-1. Clone [Astoria](https://github.com/srobo/astoria) and follow their docs on running in [Docker](https://srobo.github.io/astoria/development/index.html#running-in-docker).
-
-2. Create a `robot.py` and place it in astoria's `docker/usb` directory.
-
-   Some example code you could use can be found below
-
-   ```python
-    from time import sleep
-
-    while True:
-        print("Hello World!")
-        sleep(1)
-   ```
 
 ### kit-ui Setup
 
