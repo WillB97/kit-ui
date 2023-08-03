@@ -5,7 +5,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build --public-url /static/",
+    "build": "parcel build --public-url /static/ --no-content-hash",
     "format": "npx prettier --write src/",
     "lint": "npx prettier --check src/"
   },
