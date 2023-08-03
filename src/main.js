@@ -179,7 +179,7 @@ client.on("error", function (err) {
 client.on("close", disconnected);
 
 const handlers = {
-  "logs": (contents) => {
+  logs: (contents) => {
     const template = $.templates.logEntry;
     const entryFragment = template.content.cloneNode(true);
     const [_, ts, level_str, message] = contents.message.match(logMessageRegex);
@@ -194,7 +194,8 @@ const handlers = {
       contentEl.classList.add("has-text-danger");
     } else if (level === "WARNING") {
       contentEl.classList.add("has-text-warning");
-    } else if (level !== "") {  // Any other non-usercode log
+    } else if (level !== "") {
+      // Any other non-usercode log
       contentEl.classList.add(
         "has-text-weight-bold",
         "has-text-centered",
@@ -205,7 +206,7 @@ const handlers = {
     $.log.appendChild(entryFragment);
     if (shouldAutoScroll) contentEl.scrollIntoView();
   },
-  "connected": (contents) => {
+  connected: (contents) => {
     if (contents.state === "connected") {
       robot_connected(true);
     } else {
@@ -225,7 +226,7 @@ client.on("message", function (topic, payload) {
     // If the payload is from the camera, just use the raw string.
     try {
       contents = JSON.parse(payload.toString());
-      contents = contents.data
+      contents = contents.data;
     } catch {
       contents = payload.toString();
     }
