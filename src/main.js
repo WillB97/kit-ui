@@ -190,9 +190,9 @@ const handlers = {
     const contentEl = entryFragment.querySelector(".log-entry__content");
     contentEl.innerText = message.replaceAll(" ", String.fromCharCode(0xa0));
 
-    if (level === "ERROR") {
+    if (level === "- ERROR") {
       contentEl.classList.add("has-text-danger");
-    } else if (level === "WARNING") {
+    } else if (level === "- WARNING") {
       contentEl.classList.add("has-text-warning");
     } else if (level !== "") {
       // Any other non-usercode log
