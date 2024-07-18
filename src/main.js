@@ -133,13 +133,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
       e.preventDefault();
       switch (e.target.dataset.action) {
         case "start":
-          broadcast("start_button");
+          publish_press("start_button");
           break;
-        case "restart":
-          sendProcessRequest("restart");
+        case "reset":
+          publish_press("reset");
           break;
-        case "kill":
-          sendProcessRequest("kill");
+        case "stop":
+          publish_press("stop");
           break;
         case "clearLog":
           clearLog();
@@ -229,25 +229,28 @@ const handlers = {
       robot_connected(false);
     }
   },
-  "astoria/broadcast/start_button": (contents) => {
-    createPlainLogEntry("▶️ Start button pressed", "text-d-blue", "text-bold");
+  start_button: (contents) => {
+    if (contents.pressed === true) {
+      createPlainLogEntry(
+        "▶️ Start button pressed",
+        "text-d-blue",
+        "text-bold"
+      );
+    }
+  },
+  stop: (contents) => {
+    if (contents.pressed === true) {
+      createPlainLogEntry("💀 Killed", "text-d-red", "text-bold");
+    }
+  },
+  reset: (contents) => {
+    if (contents.pressed === true) {
+      createPlainLogEntry("🔄 Reset", "text-d-blue", "text-bold");
+    }
   },
   "camera/annotated": (contents) => {
     $.noAnnotatedImageInstructions.style.display = "none";
     $.lastAnnotatedImage.src = contents.data;
-  },
-};
-
-const ack = {
-  kill: (payload) => {
-    const logEntry = createPlainLogEntry(
-      "💀 Killed",
-      "text-d-red",
-      "text-bold",
-    );
-  },
-  restart: (payload) => {
-    createPlainLogEntry("🔄 Restart", "text-d-blue", "text-bold");
   },
 };
 
@@ -282,14 +285,6 @@ const isOwnPayload = (contents) =>
   contents.hasOwnProperty("sender_name") &&
   contents.sender_name === options.clientId;
 
-function uuid4() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0,
-      v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
 function createPlainLogEntry(text, ...classes) {
   const entry = document.createElement("div");
   entry.classList.add("plain-log-entry", ...classes);
@@ -303,54 +298,8 @@ function createPlainLogEntry(text, ...classes) {
   return entry;
 }
 
-function sendProcessRequest(type) {
-  const requestUuid = uuid4();
-  handlers[`astoria/astprocd/request/${type}/${requestUuid}`] = (payload) => {
-    if (payload.success) {
-      ack[type](payload);
-    } else {
-      const requestTypeName = type.charAt(0).toUpperCase() + type.slice(1);
-      const entryText = `💣 ${requestTypeName} failed - ${payload.reason}`;
-      createPlainLogEntry(entryText, "text-d-red", "text-bold");
-    }
-    delete handlers[payload.uuid];
-  };
-  client.publish(
-    `astoria/astprocd/request/${type}`,
-    JSON.stringify({
-      sender_name: options.clientId,
-      uuid: requestUuid,
-    }),
-  );
-}
-
-function sendMutateRequest(attr, value) {
-  const requestUuid = uuid4();
-  handlers[`astoria/astmetad/request/mutate/${requestUuid}`] = (payload) => {
-    if (!payload.success) {
-      createPlainLogEntry(`⚠️ ${payload.reason}`, "text-d-orange", "text-bold");
-    }
-  };
-  client.publish(
-    "astoria/astmetad/request/mutate",
-    JSON.stringify({
-      sender_name: options.clientId,
-      uuid: requestUuid,
-      attr,
-      value,
-    }),
-  );
-}
-
-function broadcast(eventName) {
-  client.publish(
-    `astoria/broadcast/${eventName}`,
-    JSON.stringify({
-      sender_name: options.clientId,
-      event_name: eventName,
-      priority: 0,
-    }),
-  );
+function publish_press(button) {
+  client.publish(MQTT_TOPIC + button, JSON.stringify({ pressed: true }));
 }
 
 function clearLog() {
