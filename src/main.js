@@ -8,7 +8,7 @@ const options = {
   protocolVersion: 4,
   clean: true,
   connectTimeout: 60 * 1000,
-  rejectUnauthorized: false,
+  // rejectUnauthorized: false,
 };
 
 const client = mqtt.connect(MQTT_SERVER, options);
