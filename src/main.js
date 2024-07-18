@@ -25,7 +25,7 @@ window.addEventListener(
   },
   {
     passive: true,
-  },
+  }
 );
 
 function robot_connected(connected) {
@@ -57,16 +57,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
     },
     lastAnnotatedImage: document.getElementById("last-annotated-image"),
     noAnnotatedImageInstructions: document.getElementById(
-      "no-annotated-image-instructions",
+      "no-annotated-image-instructions"
     ),
   };
 
   /// Theme Toggle
   const systemIsDark = window.matchMedia(
-    "(prefers-color-scheme: dark)",
+    "(prefers-color-scheme: dark)"
   ).matches;
   const documentClassList = [...document.body.classList].filter((className) =>
-    className.endsWith("-theme"),
+    className.endsWith("-theme")
   );
   if (documentClassList.length === 0) {
     const theme =
@@ -80,7 +80,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     });
     $.themeToggleIcons.forEach((el) => {
       el.classList.add(
-        theme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
+        theme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
       );
     });
   }
@@ -97,7 +97,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
       $.themeToggleIcons.forEach((el) => {
         el.classList.remove("mdi-weather-night", "mdi-white-balance-sunny");
         el.classList.add(
-          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
+          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
         );
       });
     });
@@ -117,7 +117,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
   // Add a click event on various child elements to close the parent modal
   document
     .querySelectorAll(
-      ".modal-background-close, .modal-close, .modal-card-head .delete, .modal-card-foot .button",
+      ".modal-background-close, .modal-close, .modal-card-head .delete, .modal-card-foot .button"
     )
     .forEach(($close) => {
       const $target = $close.closest(".modal");
@@ -145,7 +145,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           clearLog();
           break;
       }
-    }),
+    })
   );
 
   $.themeToggles.forEach((el) =>
@@ -160,10 +160,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
       $.themeToggleIcons.forEach((el) => {
         el.classList.remove("mdi-weather-night", "mdi-white-balance-sunny");
         el.classList.add(
-          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
+          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
         );
       });
-    }),
+    })
   );
 });
 const status_labels = {
@@ -215,7 +215,7 @@ const handlers = {
       contentEl.classList.add(
         "has-text-weight-bold",
         "has-text-centered",
-        "is-family-sans-serif",
+        "is-family-sans-serif"
       );
     }
 
