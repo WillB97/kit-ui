@@ -167,11 +167,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
   );
 });
 const status_labels = {
-  code_crashed: "Crashed",
-  code_finished: "Finished",
-  code_killed: "Killed",
-  code_running: "Running",
-  code_starting: "Starting",
+  NoUSB: "No USB",
+  Running: "Running",
+  Killed: "Killed",
+  Finished: "Finished",
+  Crashed: "Crashed",
 };
 
 client.on("connect", function () {
@@ -228,6 +228,11 @@ const handlers = {
     } else {
       robot_connected(false);
     }
+  },
+  state: (contents) => {
+    const statusLabel = status_labels[contents.state];
+    document.getElementById("status").textContent = statusLabel;
+    document.title = `Robot - ${statusLabel || "Ready"}`;
   },
   start_button: (contents) => {
     if (contents.pressed === true) {
