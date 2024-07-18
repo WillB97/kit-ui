@@ -12,7 +12,7 @@ const options = {
   rejectUnauthorized: false,
 };
 
-const client = mqtt.connect(`ws://${location.hostname}:9001`, options);
+const client = mqtt.connect(MQTT_SERVER, options);
 const logMessageRegex = /\[(\d+:\d{2}:\d{2}\.?\d*)] (.*)/;
 let connectedServices = {
   astdiskd: false,
@@ -228,8 +228,7 @@ const status_labels = {
 client.on("connect", function () {
   document.getElementById("serviceProgress").value = 1;
   console.log("Connected!");
-  client.subscribe("astoria/#");
-  client.subscribe("camera/#");
+  client.subscribe(MQTT_TOPIC);
 });
 
 const disconnected = function (reset = true) {
