@@ -12,7 +12,7 @@ const options = {
 };
 
 const client = mqtt.connect(MQTT_SERVER, options);
-const logMessageRegex = /\[(\d+:\d{2}:\d{2}\.?\d*)] (.*)/;
+const logMessageRegex = /\[([\.\d]+)(.*)] (.*)/;
 let $ = {};
 let shouldAutoScroll = true;
 
@@ -195,26 +195,28 @@ client.on("error", function (err) {
 client.on("close", disconnected);
 
 const handlers = {
-  "astoria/broadcast/usercode_log": (contents) => {
+  logs: (contents) => {
     const template = $.templates.logEntry;
     const entryFragment = template.content.cloneNode(true);
-    const [_, ts, message] = contents.content.match(logMessageRegex);
+    const [_, ts, level_str, message] = contents.message.match(logMessageRegex);
+    const level = level_str.trim();
 
-    entryFragment.querySelector(".log-entry").dataset.source = contents.source;
+    entryFragment.querySelector(".log-entry").dataset.source = level;
     entryFragment.querySelector(".log-entry__ts").textContent = ts;
     const contentEl = entryFragment.querySelector(".log-entry__content");
     contentEl.innerText = message.replaceAll(" ", String.fromCharCode(0xa0));
 
-    if (contents.source === "astoria") {
+    if (level === "- ERROR") {
+      contentEl.classList.add("has-text-danger");
+    } else if (level === "- WARNING") {
+      contentEl.classList.add("has-text-warning");
+    } else if (level !== "") {
+      // Any other non-usercode log
       contentEl.classList.add(
         "has-text-weight-bold",
         "has-text-centered",
         "is-family-sans-serif",
       );
-    } else if (contents.source === "stderr") {
-      contentEl.classList.add("has-text-danger");
-    } else if (message.indexOf("WARNING:") === 0) {
-      contentEl.classList.add("has-text-warning");
     }
 
     $.log.appendChild(entryFragment);
@@ -280,19 +282,28 @@ const ack = {
 
 client.on("message", function (topic, payload) {
   let contents = null;
-  contents = JSON.parse(payload.toString());
-  if (topic.startsWith("astoria/")) {
-    console.log(isOwnPayload(contents) ? "🦝" : "🤖", topic, contents);
-  } else {
-    // Truncate the logged image data
+  const subtopic = topic.slice(MQTT_TOPIC.length - 1);
+  if (subtopic.startsWith("camera/")) {
+    // If the payload is from the camera, just use the raw string.
+    try {
+      contents = JSON.parse(payload.toString());
+      contents = contents.data;
+    } catch {
+      contents = payload.toString();
+    }
     console.log(
       isOwnPayload(contents) ? "🦝" : "🤖",
       topic,
-      payload.toString().substring(0, 100),
+      contents.length,
+      "bytes",
+      contents.substring(0, 100)
     );
+  } else {
+    contents = JSON.parse(payload.toString());
+    console.log(isOwnPayload(contents) ? "🦝" : "🤖", topic, contents);
   }
-  if (topic in handlers) {
-    handlers[topic](contents);
+  if (subtopic in handlers) {
+    handlers[subtopic](contents);
   }
 });
 
