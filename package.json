@@ -6,6 +6,7 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
+    "build-django": "parcel build --public-url /static/",
     "format": "npx prettier --write src/",
     "lint": "npx prettier --check src/"
   },
