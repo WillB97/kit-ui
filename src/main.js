@@ -13,11 +13,6 @@ const options = {
 
 const client = mqtt.connect(MQTT_SERVER, options);
 const logMessageRegex = /\[(\d+:\d{2}:\d{2}\.?\d*)] (.*)/;
-let connectedServices = {
-  astdiskd: false,
-  astmetad: false,
-  astprocd: false,
-};
 let $ = {};
 let shouldAutoScroll = true;
 
@@ -33,15 +28,13 @@ window.addEventListener(
   },
 );
 
-function updateServiceState() {
-  const runningServiceCount = Object.values(connectedServices).filter(
-    (val) => val,
-  ).length;
-  if (runningServiceCount === Object.values(connectedServices).length) {
+function robot_connected(connected) {
+  if (connected) {
     document.body.classList.add("is-connected");
     $.modals.disconnected.classList.remove("is-active");
   } else {
-    document.getElementById("serviceProgress").value = runningServiceCount + 1;
+    document.body.classList.remove("is-connected");
+    $.modals.disconnected.classList.add("is-active");
   }
 }
 
@@ -189,18 +182,8 @@ client.on("connect", function () {
 
 const disconnected = function (reset = true) {
   document.title = "Robot";
-  document.getElementById("serviceProgress").removeAttribute("value");
-  document.body.classList.remove("is-connected");
-  $.modals.disconnected.classList.add("is-active");
-
-  // Reset the state of all services if needed.
-  if (reset) {
-    connectedServices = {
-      astdiskd: false,
-      astmetad: false,
-      astprocd: false,
-    };
-  }
+  document.getElementById("serviceProgress").value = 0;
+  robot_connected(false);
 };
 
 client.on("error", function (err) {
@@ -236,6 +219,13 @@ const handlers = {
 
     $.log.appendChild(entryFragment);
     if (shouldAutoScroll) contentEl.scrollIntoView();
+  },
+  connected: (contents) => {
+    if (contents.state === "connected") {
+      robot_connected(true);
+    } else {
+      robot_connected(false);
+    }
   },
   "astoria/broadcast/start_button": (contents) => {
     createPlainLogEntry("▶️ Start button pressed", "text-d-blue", "text-bold");
