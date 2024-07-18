@@ -1,5 +1,4 @@
 import mqtt from "mqtt";
-import QRCode from "qrcode";
 import { version } from "../package.json";
 
 const options = {
@@ -49,7 +48,6 @@ function updateServiceState() {
 window.addEventListener("DOMContentLoaded", (event) => {
   $ = {
     log: document.getElementById("log"),
-    wifiQRCode: document.getElementById("qrcode-wifi"),
     templates: {
       logEntry: document.getElementById("tpl-log-entry"),
     },
@@ -63,15 +61,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
     ],
     modals: {
       disconnected: document.getElementById("modal-disconnected"),
-      info: document.getElementById("modal-info"),
     },
     lastAnnotatedImage: document.getElementById("last-annotated-image"),
     noAnnotatedImageInstructions: document.getElementById(
       "no-annotated-image-instructions",
     ),
   };
-
-  document.getElementById("info-kit-ui-version").textContent = version;
 
   /// Theme Toggle
   const systemIsDark = window.matchMedia(
@@ -160,12 +155,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }),
   );
 
-  document.querySelectorAll(".sends-mutate-request").forEach((el) =>
-    el.addEventListener("change", function (e) {
-      sendMutateRequest(e.target.dataset.property, e.target.value);
-    }),
-  );
-
   $.themeToggles.forEach((el) =>
     el.addEventListener("click", function (e) {
       const currentTheme = localStorage.getItem("theme");
@@ -183,40 +172,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
       });
     }),
   );
-
-  document.querySelectorAll("#mobile-metadata-toggle").forEach((el) =>
-    el.addEventListener("click", function (e) {
-      e.preventDefault();
-      document
-        .getElementById("mobile-metadata-controls")
-        .classList.toggle("is-active");
-    }),
-  );
 });
-
-function updateInformationModal(metadata) {
-  let ssid, psk;
-  if (metadata.wifi_ssid != null && metadata.wifi_enabled) {
-    ssid = metadata.wifi_ssid;
-    psk = metadata.wifi_psk;
-    QRCode.toCanvas($.wifiQRCode, `WIFI:T:WPA;S:${ssid};P:${psk};;`);
-  } else {
-    ssid = "Disabled";
-    psk = "Disabled";
-    $.wifiQRCode
-      .getContext("2d")
-      .clearRect(0, 0, $.wifiQRCode.width, $.wifiQRCode.height);
-  }
-  document.getElementById("info-os-version").textContent =
-    metadata.os_pretty_name;
-  document.getElementById("info-python-version").textContent =
-    metadata.python_version;
-  document.getElementById("info-entrypoint").textContent =
-    metadata.usercode_entrypoint;
-  document.getElementById("info-wifi-ssid").textContent = ssid;
-  document.getElementById("info-wifi-secret").textContent = psk;
-}
-
 const status_labels = {
   code_crashed: "Crashed",
   code_finished: "Finished",

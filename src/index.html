@@ -74,63 +74,8 @@
             </span>
           </span>
         </div>
-        <div class="control">
-          <span
-            class="modal-trigger button"
-            data-target="modal-info"
-            tabindex="0"
-          >
-            <span class="icon has-text-link">
-              <span class="mdi mdi-24px mdi-information"></span>
-            </span>
-          </span>
-        </div>
-        <div class="control">
-          <div class="select">
-            <select
-              id="mode_select"
-              data-property="mode"
-              class="sends-mutate-request"
-            >
-              <option value="DEV">Development mode</option>
-              <option value="COMP">Competition mode</option>
-            </select>
-          </div>
-        </div>
-        <div class="control">
-          <div class="select">
-            <select
-              id="zone_select"
-              data-property="zone"
-              class="sends-mutate-request"
-            >
-              <option value="0">Zone 0</option>
-              <option value="1">Zone 1</option>
-              <option value="2">Zone 2</option>
-              <option value="3">Zone 3</option>
-            </select>
-          </div>
-        </div>
       </div>
       <div class="mobile-metadata-toggle">
-        <div class="control">
-          <span id="mobile-metadata-toggle" tabindex="0" class="button">
-            <span class="icon has-text-link">
-              <span class="mdi mdi-24px mdi-cog" />
-            </span>
-          </span>
-        </div>
-        <div class="control">
-          <span
-            tabindex="0"
-            class="button modal-trigger"
-            data-target="modal-info"
-          >
-            <span class="icon has-text-link">
-              <span class="mdi mdi-24px mdi-information" />
-            </span>
-          </span>
-        </div>
         <div class="control">
           <span
             tabindex="0"
@@ -155,86 +100,6 @@
           </span>
         </div>
       </div>
-      <div id="mobile-metadata-controls">
-        <div class="mobile-control">
-          <span class="mobile-control-label">Mode</span>
-          <ul class="radio-buttons">
-            <li>
-              <input
-                type="radio"
-                data-property="mode"
-                name="mode"
-                id="mode-dev"
-                value="DEV"
-                class="sends-mutate-request"
-              />
-              <label for="mode-dev">Development</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                data-property="mode"
-                name="mode"
-                id="mode-comp"
-                value="COMP"
-                class="sends-mutate-request"
-              />
-              <label for="mode-comp">Competition</label>
-            </li>
-          </ul>
-        </div>
-        <div class="mobile-control">
-          <span class="mobile-control-label" style="margin-right: 0.85rem"
-            >Zone</span
-          >
-          <ul class="radio-buttons">
-            <li class="compact">
-              <input
-                type="radio"
-                data-property="zone"
-                name="zone"
-                id="zone-0"
-                value="0"
-                class="sends-mutate-request"
-              />
-              <label for="zone-0">0</label>
-            </li>
-            <li class="compact">
-              <input
-                type="radio"
-                data-property="zone"
-                name="zone"
-                id="zone-1"
-                value="1"
-                class="sends-mutate-request"
-              />
-              <label for="zone-1">1</label>
-            </li>
-            <li class="compact">
-              <input
-                type="radio"
-                data-property="zone"
-                name="zone"
-                id="zone-2"
-                value="2"
-                class="sends-mutate-request"
-              />
-              <label for="zone-2">2</label>
-            </li>
-            <li class="compact">
-              <input
-                type="radio"
-                data-property="zone"
-                name="zone"
-                id="zone-3"
-                value="3"
-                class="sends-mutate-request"
-              />
-              <label for="zone-3">3</label>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
     <div class="log-list" id="log"></div>
 
@@ -254,31 +119,6 @@
             class="progress is-primary"
             max="4"
           ></progress>
-        </section>
-      </div>
-    </div>
-
-    <div class="modal" id="modal-info">
-      <div class="modal-background modal-background-close"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title" id="info-os-version"></p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <div class="column">
-            <p>Kit UI Version: <code id="info-kit-ui-version"></code></p>
-            <p>Python Version: <code id="info-python-version"></code></p>
-            <p>Entrypoint: <code id="info-entrypoint"></code></p>
-            <p>WiFi Network: <code id="info-wifi-ssid"></code></p>
-            <p>WiFi Password: <code id="info-wifi-secret"></code></p>
-          </div>
-          <div class="column wifi-details">
-            <p>
-              Join other devices to the WiFi network by scanning the QR Code
-            </p>
-            <canvas id="qrcode-wifi"></canvas>
-          </div>
         </section>
       </div>
     </div>
