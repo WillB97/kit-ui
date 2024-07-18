@@ -232,35 +232,6 @@ const handlers = {
   "astoria/broadcast/start_button": (contents) => {
     createPlainLogEntry("▶️ Start button pressed", "text-d-blue", "text-bold");
   },
-  "astoria/astdiskd": (contents) => {
-    connectedServices["astdiskd"] = contents.status === "RUNNING";
-    if (!connectedServices["astdiskd"]) disconnected(false);
-
-    updateServiceState();
-  },
-  "astoria/astmetad": (contents) => {
-    connectedServices["astmetad"] = contents.status === "RUNNING";
-    if (!connectedServices["astmetad"]) disconnected(false);
-
-    updateServiceState();
-    updateInformationModal(contents.metadata);
-    document.getElementById("mode_select").value = contents.metadata.mode;
-    document.getElementById("zone_select").value = contents.metadata.zone;
-
-    document.getElementById(
-      `mode-${contents.metadata.mode.toLowerCase()}`,
-    ).checked = true;
-    document.getElementById(`zone-${contents.metadata.zone}`).checked = true;
-  },
-  "astoria/astprocd": (contents) => {
-    connectedServices["astprocd"] = contents.status === "RUNNING";
-    if (!connectedServices["astprocd"]) disconnected(false);
-
-    updateServiceState();
-    const statusLabel = status_labels[contents.code_status];
-    document.getElementById("status").textContent = statusLabel;
-    document.title = `Robot - ${statusLabel || "Ready"}`;
-  },
   "camera/annotated": (contents) => {
     $.noAnnotatedImageInstructions.style.display = "none";
     $.lastAnnotatedImage.src = contents.data;
