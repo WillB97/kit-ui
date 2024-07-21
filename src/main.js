@@ -328,7 +328,7 @@ function createPlainLogEntry(text, ...classes) {
 
 function publish_press(button) {
   console.log("Pressed", button);
-  topic_root = MQTT_TOPIC.slice(0, -1);
+  const topic_root = MQTT_TOPIC.slice(0, -1);
   client.publish(topic_root + button, JSON.stringify({ pressed: true }));
 }
 
