@@ -4,9 +4,10 @@
   "description": "",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
-    "build-django": "parcel build --public-url /static/",
+    "start": "mkdir -p dist && cp config.json dist/ && parcel",
+    "build": "parcel build && cp config.json dist/",
+    "build-django": "parcel build --public-url /static/ui/ --dist-dir dist/ui/",
+    "watch-django": "parcel watch --public-url /static/ui/ --dist-dir dist/ui/",
     "format": "npx prettier --write src/",
     "lint": "npx prettier --check src/"
   },

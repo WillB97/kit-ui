@@ -11,7 +11,35 @@ const options = {
   // rejectUnauthorized: false,
 };
 
-const client = mqtt.connect(MQTT_SERVER, options);
+var MQTT_TOPIC = "robot/#";
+var client = null;
+
+let query_params = new URL(document.location.toString()).searchParams;
+fetch("/config.json?" + query_params)
+  .then((response) => response.json())
+  .then((config) => {
+    MQTT_TOPIC = config.topic_root + "/#";
+    if (config.logout_url !== undefined) {
+      // TODO: Add logout button
+    }
+
+    let broker_url = config.broker_url.replace("{hostname}", location.hostname);
+    console.log("Connecting to", broker_url);
+    client = mqtt.connect(broker_url, options);
+    client.on("connect", function () {
+      document.getElementById("serviceProgress").value = 1;
+      console.log("Connected!");
+      client.subscribe(MQTT_TOPIC);
+    });
+    client.on("error", function (err) {
+      disconnected();
+      console.error(err);
+      client.end();
+    });
+    client.on("close", disconnected);
+    client.on("message", on_message);
+  });
+
 const logMessageRegex = /\[([\.\d]+)(.*)] (.*)/;
 let $ = {};
 let shouldAutoScroll = true;
@@ -25,7 +53,7 @@ window.addEventListener(
   },
   {
     passive: true,
-  }
+  },
 );
 
 function robot_connected(connected) {
@@ -57,16 +85,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
     },
     lastAnnotatedImage: document.getElementById("last-annotated-image"),
     noAnnotatedImageInstructions: document.getElementById(
-      "no-annotated-image-instructions"
+      "no-annotated-image-instructions",
     ),
   };
 
   /// Theme Toggle
   const systemIsDark = window.matchMedia(
-    "(prefers-color-scheme: dark)"
+    "(prefers-color-scheme: dark)",
   ).matches;
   const documentClassList = [...document.body.classList].filter((className) =>
-    className.endsWith("-theme")
+    className.endsWith("-theme"),
   );
   if (documentClassList.length === 0) {
     const theme =
@@ -80,7 +108,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     });
     $.themeToggleIcons.forEach((el) => {
       el.classList.add(
-        theme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
+        theme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
       );
     });
   }
@@ -97,7 +125,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
       $.themeToggleIcons.forEach((el) => {
         el.classList.remove("mdi-weather-night", "mdi-white-balance-sunny");
         el.classList.add(
-          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
+          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
         );
       });
     });
@@ -117,7 +145,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
   // Add a click event on various child elements to close the parent modal
   document
     .querySelectorAll(
-      ".modal-background-close, .modal-close, .modal-card-head .delete, .modal-card-foot .button"
+      ".modal-background-close, .modal-close, .modal-card-head .delete, .modal-card-foot .button",
     )
     .forEach(($close) => {
       const $target = $close.closest(".modal");
@@ -145,7 +173,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           clearLog();
           break;
       }
-    })
+    }),
   );
 
   $.themeToggles.forEach((el) =>
@@ -160,10 +188,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
       $.themeToggleIcons.forEach((el) => {
         el.classList.remove("mdi-weather-night", "mdi-white-balance-sunny");
         el.classList.add(
-          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night"
+          newTheme === "dark" ? "mdi-white-balance-sunny" : "mdi-weather-night",
         );
       });
-    })
+    }),
   );
 });
 const status_labels = {
@@ -174,25 +202,11 @@ const status_labels = {
   Crashed: "Crashed",
 };
 
-client.on("connect", function () {
-  document.getElementById("serviceProgress").value = 1;
-  console.log("Connected!");
-  client.subscribe(MQTT_TOPIC);
-});
-
 const disconnected = function (reset = true) {
   document.title = "Robot";
   document.getElementById("serviceProgress").value = 0;
   robot_connected(false);
 };
-
-client.on("error", function (err) {
-  disconnected();
-  console.error(err);
-  client.end();
-});
-
-client.on("close", disconnected);
 
 const handlers = {
   logs: (contents) => {
@@ -215,7 +229,7 @@ const handlers = {
       contentEl.classList.add(
         "has-text-weight-bold",
         "has-text-centered",
-        "is-family-sans-serif"
+        "is-family-sans-serif",
       );
     }
 
@@ -239,7 +253,7 @@ const handlers = {
       createPlainLogEntry(
         "▶️ Start button pressed",
         "text-d-blue",
-        "text-bold"
+        "text-bold",
       );
     }
   },
@@ -259,7 +273,7 @@ const handlers = {
   },
 };
 
-client.on("message", function (topic, payload) {
+function on_message(topic, payload) {
   let contents = null;
   const subtopic = topic.slice(MQTT_TOPIC.length - 1);
   if (subtopic.startsWith("camera/")) {
@@ -269,7 +283,7 @@ client.on("message", function (topic, payload) {
       topic,
       contents.data.length,
       "bytes",
-      contents.data.substring(0, 100)
+      contents.data.substring(0, 100),
     );
   } else {
     contents = JSON.parse(payload.toString());
@@ -278,7 +292,7 @@ client.on("message", function (topic, payload) {
   if (subtopic in handlers) {
     handlers[subtopic](contents);
   }
-});
+}
 
 const isOwnPayload = (contents) =>
   contents.hasOwnProperty("sender_name") &&

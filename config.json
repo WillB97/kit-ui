@@ -1,0 +1,4 @@
+{
+    "broker_url": "ws://{hostname}:9001",
+    "topic_root": "robot"
+}
