@@ -8,6 +8,7 @@
     "build": "parcel build && cp config.json dist/",
     "build-django": "parcel build --public-url /static/ui/ --dist-dir dist/ui/",
     "watch-django": "parcel watch --public-url /static/ui/ --dist-dir dist/ui/",
+    "clean": "rm -rf dist .parcel-cache",
     "format": "npx prettier --write src/",
     "lint": "npx prettier --check src/"
   },
