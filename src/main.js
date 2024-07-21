@@ -16,11 +16,26 @@ var client = null;
 
 let query_params = new URL(document.location.toString()).searchParams;
 fetch("/config.json?" + query_params)
-  .then((response) => response.json())
+  // catch login fail and redirect to / to show login page
+  .then((response) => {
+    if (response.status === 401) {
+      window.location.href = "/";
+    }
+    return response.json()
+  })
   .then((config) => {
     MQTT_TOPIC = config.topic_root + "/#";
     if (config.logout_url !== undefined) {
-      // TODO: Add logout button
+      const logoutBtns = [
+        document.getElementById("logout-btn"),
+        document.getElementById("mobile-logout-btn"),
+      ]
+
+      // Add logout buttons now we have somewhere to send them
+      logoutBtns.forEach((el) => {
+        el.style.display = "block";
+        el.href = config.logout_url;
+      });
     }
 
     let broker_url = config.broker_url.replace("{hostname}", location.hostname);
